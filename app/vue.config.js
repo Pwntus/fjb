@@ -1,5 +1,4 @@
 module.exports = {
-  "transpileDependencies": [
-    "vuetify"
-  ]
+  publicPath: '/fjb/',
+  transpileDependencies: ['vuetify']
 }
