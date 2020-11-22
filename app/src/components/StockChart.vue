@@ -74,7 +74,7 @@ export default {
           borderRadius: 0,
           headerFormat: '',
           pointFormat:
-            'Pris 1 FJB: <b>{point.y}NOK</b><br/>I omløp (ca): <b>{point.n}st</b>'
+            'Pris 1 FJB: <b>{point.y} NOK</b><br/>I omløp (ca): <b>{point.n}st</b>'
         },
         xAxis: {
           type: 'datetime'
