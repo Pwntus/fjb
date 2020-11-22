@@ -1,0 +1,57 @@
+service: fjb
+
+plugins:
+  - serverless-webpack
+
+custom:
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules: true
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: ${opt:stage, 'prod'}
+  profile: ${self:provider.stage}
+  region: ${opt:region, 'eu-west-1'}
+  logRetentionInDays: 14
+
+  environment:
+    bucketName: fjb-bucket-${self:provider.stage}-bucket
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:GetObject
+        - s3:PutObject
+        - s3:PutObjectAcl
+      Resource:
+        - !GetAtt FjbBucket.Arn
+        - !Join ['', [!GetAtt FjbBucket.Arn, '/*']]
+
+functions:
+  fjb:
+    handler: fjb.main
+    name: ${self:provider.stage}-fjb
+
+resources:
+  Resources:
+    FjbBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:provider.environment.bucketName}
+        CorsConfiguration:
+          CorsRules:
+            - AllowedOrigins:
+                - '*'
+              AllowedMethods:
+                - 'GET'
+                - 'PUT'
+              MaxAge: 3000
+              ExposedHeaders:
+                - 'x-amz-server-side-encryption'
+                - 'x-amz-request-id'
+                - 'x-amz-id-2'
+                - 'ETag'
+              AllowedHeaders:
+                - '*'
