@@ -18,6 +18,18 @@ v-container
       | Dette er en "indeks" som følger prisen for en (1) Fun Light Julebrus i Norske kroner.
       | Dataene hentes fra <a href="https://www.finn.no/bap/forsale/search.html?q=fun+light+julebrus&search_type=SEARCH_ID_BAP_ALL&sort=PRICE_ASC" target="_new">finn.no</a> og ser på den gjennomsnittlige valutaprisen for hver annonse.
       | Dataene hentes automatisk inn hver halvtime.
+  v-row.bottom-img(
+    align="center"
+    justify="center"
+  )
+    a(
+      href="https://github.com/Pwntus/fjb"
+      target="_new"
+      title="Pwntus/fjb"
+    )
+      img.gh(
+        src="../assets/GitHub-Mark-Light-120px-plus.png"
+      )
 </template>
 
 <script>
@@ -41,10 +53,14 @@ export default {
       max-height 100%
 
   .faq
-    margin 200px 0 150px
+    margin 200px 0 0
 
   a, a:active, a:visited
     color #013251
     text-decoration none
     font-weight bold
+
+  .gh
+    width 60px
+    margin-bottom 50px
 </style>
