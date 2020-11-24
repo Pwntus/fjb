@@ -39,14 +39,16 @@ export default {
         series: [
           {
             name: 'Pris',
+            type: 'spline',
             data: this.seriesData
           }
         ],
         plotOptions: {
-          series: {
+          spline: {
+            lineWidth: 1,
             turboThreshold: 0,
             animation: {
-              duration: 250
+              duration: 4000
             },
             marker: {
               radius: 2,
@@ -55,7 +57,8 @@ export default {
             dataLabels: {
               enabled: true,
               format: '{point.y} NOK',
-              color: '#013251',
+              color: '#0c2231',
+              backgroundColor: 'transparent',
               padding: 15,
               style: {
                 textOutline: 0
@@ -67,14 +70,25 @@ export default {
         tooltip: {
           enabled: true,
           animation: false,
-          backgroundColor: '#FFF',
+          backgroundColor: 'rgba(255, 255, 255, 0.9)',
           hideDelay: 0,
-          shadow: true,
+          shadow: false,
+          padding: 16,
+          useHTML: true,
           borderWidth: 0,
-          borderRadius: 0,
+          borderRadius: 5,
           headerFormat: '',
-          pointFormat:
-            'Pris 1 FJB: <b>{point.y} NOK</b><br/>I omløp (ca): <b>{point.n}st</b>'
+          pointFormat: `
+            <table cellspacing="0" cellpadding="0" style="border:none;color:#000">
+              <tr>
+                <td style="padding-right:8px;text-align:right">Pris 1 FJB:</td>
+                <td style="font-weight:bold;text-align:left;color:#0c2231">{point.y} NOK</td>
+              </tr>
+              <tr>
+                <td style="padding:4px 8px 0 0;text-align:right">I omløp (ca):</td>
+                <td style="padding-top:4px;font-weight:bold;text-align:left;color:#0c2231">{point.n}st</td>
+              </tr>
+            </table>`
         },
         xAxis: {
           type: 'datetime'

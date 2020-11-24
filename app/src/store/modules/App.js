@@ -1,4 +1,5 @@
 import * as t from '@/store/types'
+import config from '@/config'
 
 const state = {
   list: []
@@ -13,7 +14,7 @@ const mutations = {
 const actions = {
   async fetchData({ commit }) {
     try {
-      const result = await fetch(process.env.VUE_APP_FILE_ENDPOINT)
+      const result = await fetch(config.FILE_ENDPOINT)
       const text = await result.text()
       const list = text
         .split('\n')

@@ -16,7 +16,7 @@ v-container
     .display-2.font-weight-light Hva er dette?
     .title.font-weight-light.mt-4.mb-12
       | Dette er en "indeks" som følger prisen for en (1) Fun Light Julebrus i Norske kroner.
-      | Dataene hentes fra <a href="https://www.finn.no/bap/forsale/search.html?q=fun+light+julebrus&search_type=SEARCH_ID_BAP_ALL&sort=PRICE_ASC" target="_new">finn.no</a> og ser på den gjennomsnittlige valutaprisen for hver annonse.
+      | Dataene hentes fra <a class="lf" href="https://www.finn.no/bap/forsale/search.html?q=fun+light+julebrus&search_type=SEARCH_ID_BAP_ALL&sort=PRICE_ASC" target="_new">Finn.no</a> og ser på den gjennomsnittlige valutaprisen for hver annonse.
       | Dataene hentes automatisk inn hver halvtime.
   v-row.bottom-img(
     align="center"
@@ -46,21 +46,28 @@ export default {
 <style lang="stylus" scoped>
 .container
   .top-img
-    height 400px
+    height 300px
     position relative
 
     img
       max-height 100%
 
   .faq
-    margin 200px 0 0
+    margin 100px 0 0
 
-  a, a:active, a:visited
-    color #013251
+  .lf
+    padding 1px 8px
+    background #FFF
+    color #d81636
     text-decoration none
-    font-weight bold
+    border-radius 3px
+
+    &:hover
+      background #0c2231
+      color #FFF
 
   .gh
     width 60px
     margin-bottom 50px
+    border 0
 </style>

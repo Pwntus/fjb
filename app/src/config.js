@@ -48,11 +48,15 @@ const HIGHCHARTS_GLOBAL = {
 }
 
 const dev = {
-  HIGHCHARTS_GLOBAL
+  HIGHCHARTS_GLOBAL,
+  FILE_ENDPOINT:
+    'https://fjb-bucket-prod-bucket.s3-eu-west-1.amazonaws.com/file'
 }
 
 const prod = {
-  HIGHCHARTS_GLOBAL
+  HIGHCHARTS_GLOBAL,
+  FILE_ENDPOINT:
+    'https://fjb-bucket-prod-bucket.s3-eu-west-1.amazonaws.com/file'
 }
 
 const config = process.env.NODE_ENV === 'development' ? dev : prod
