@@ -44,7 +44,7 @@ const HIGHCHARTS_GLOBAL = {
       }
     }
   },
-  colors: ['#FFF']
+  colors: ['#FFF', '#0c2231']
 }
 
 const dev = {

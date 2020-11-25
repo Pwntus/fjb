@@ -19,11 +19,12 @@ const actions = {
       const list = text
         .split('\n')
         .map(line => {
-          const [timestamp, value, n] = line.split(' ')
+          const [timestamp, value, n, median] = line.split(' ')
           return {
             timestamp: parseInt(timestamp) || '',
             value: parseFloat(value) || undefined,
-            n: parseInt(n) || undefined
+            n: parseInt(n) || undefined,
+            median: parseInt(median) || undefined
           }
         })
         .filter(({ timestamp, value, n }) => {

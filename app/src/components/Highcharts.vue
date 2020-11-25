@@ -15,6 +15,10 @@ export default {
       type: Object,
       required: true
     },
+    showMedian: {
+      type: Boolean,
+      default: false
+    },
     callback: Function,
     updateArgs: {
       type: Array,
@@ -30,6 +34,15 @@ export default {
         this.chart.update(Object.assign({}, newValue), ...this.updateArgs)
       },
       deep: true
+    },
+    showMedian: {
+      handler(newValue) {
+        if (newValue) {
+          this.chart.series[1].show()
+        } else {
+          this.chart.series[1].hide()
+        }
+      }
     }
   },
   methods: {

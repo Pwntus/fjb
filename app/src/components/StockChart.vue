@@ -2,7 +2,15 @@
 .stock-chart(v-if="ready")
   highcharts(
     :options="chartOptions"
+    :show-median="showMedian"
     ref="chart"
+  )
+  v-switch.mt-6(
+    v-model="showMedian"
+    label="Vis median"
+    color="#0c2231"
+    inset dark dense
+    hide-details
   )
 </template>
 
@@ -17,16 +25,26 @@ export default {
   components: { Highcharts },
   data: () => ({
     ready: false,
+    showMedian: false,
     chartOptions: {}
   }),
   computed: {
     ...mapState('App', ['list']),
-    seriesData() {
+    seriesAvg() {
       return this.list.map(({ timestamp, value, n }) => ({
         x: timestamp,
         y: value,
         n: n
       }))
+    },
+    seriesMedian() {
+      return this.list
+        .map(({ timestamp, median, n }) => ({
+          x: timestamp,
+          y: median,
+          n: n
+        }))
+        .filter(({ y }) => y)
     }
   },
   methods: {
@@ -38,9 +56,15 @@ export default {
         },
         series: [
           {
-            name: 'Pris',
+            name: 'Pris 1 FJB',
             type: 'spline',
-            data: this.seriesData
+            data: this.seriesAvg
+          },
+          {
+            name: 'Pris 1 FJB (median)',
+            type: 'spline',
+            data: this.seriesMedian,
+            visible: this.showMedian
           }
         ],
         plotOptions: {
@@ -81,7 +105,7 @@ export default {
           pointFormat: `
             <table cellspacing="0" cellpadding="0" style="border:none;color:#000">
               <tr>
-                <td style="padding-right:8px;text-align:right">Pris 1 FJB:</td>
+                <td style="padding-right:8px;text-align:right">{series.name}:</td>
                 <td style="font-weight:bold;text-align:left;color:#0c2231">{point.y} NOK</td>
               </tr>
               <tr>
@@ -122,7 +146,7 @@ export default {
   width 100%
   height 300px
 
-  > div
+  > div:not(.v-input)
     position relative
     height 100%
 </style>
