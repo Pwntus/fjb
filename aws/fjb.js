@@ -8,14 +8,8 @@ const FILENAME = 'file'
 const ENDPOINT = 'https://www.finn.no/api/search-qf'
 const Q = 'fun+light+julebrus'
 
-const MAP_FN = ({ timestamp, location, price: { amount } }) => {
-  return {
-    timestamp,
-    location,
-    amount
-  }
-}
-const FILTER_FN = ({ amount }) => amount > 0
+const MAP_FN = ({ price: { amount } }) => amount
+const FILTER_FN = amount => amount > 0
 
 const getS3Object = (file, s3Params) => {
   return new Promise((resolve, reject) => {
@@ -79,13 +73,22 @@ export const main = async (event, context) => {
       }
     }
 
-    // Calculate average
-    const n = offers.length
-    const avg =
-      n > 0
-        ? (offers.reduce((a, b) => a + get(b, 'amount', 0), 0) / n).toFixed(2)
-        : null
+    // Sort all offers, get length and timestamp
+    const sorted = offers.sort((a, b) => a - b)
+    const n = sorted.length
     const timestamp = new Date().getTime()
+
+    let avg = 0,
+      median = 0
+
+    if (n > 0) {
+      // Calculate average
+      avg = (sorted.reduce((a, b) => a + b, 0) / n).toFixed(2)
+
+      // Calculate median
+      const mid = Math.floor(n / 2)
+      median = n % 2 !== 0 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2
+    }
 
     // Read current storage
     const tmpPath = `/tmp/${timestamp}`
@@ -96,7 +99,7 @@ export const main = async (event, context) => {
     let content = fs.readFileSync(tmpPath)
 
     // Modify content (incl. newline)
-    content += `${timestamp} ${avg} ${n}
+    content += `${timestamp} ${avg} ${n} ${median}
 `
 
     // Overwrite new storage
