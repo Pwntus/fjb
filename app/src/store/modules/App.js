@@ -1,23 +1,17 @@
-import * as t from '@/store/types'
+// import * as t from '@/store/types'
 import config from '@/config'
-
-const state = {
-  list: []
-}
-
-const mutations = {
-  [t.APP_SET_LIST](state, payload) {
-    state.list = payload
-  }
-}
+import list from '@/list'
 
 const actions = {
-  async fetchData({ commit }) {
+  async fetchData() {
     try {
       const result = await fetch(config.FILE_ENDPOINT)
       const text = await result.text()
-      const list = text
+      const arr = text
         .split('\n')
+        .filter((_, i) => {
+          return (i + 1) % 60 === 0
+        })
         .map(line => {
           const [timestamp, value, n, median] = line.split(' ')
           return {
@@ -30,7 +24,7 @@ const actions = {
         .filter(({ timestamp, value, n }) => {
           return timestamp !== '' && value !== undefined && n !== undefined
         })
-      commit(t.APP_SET_LIST, list)
+      list.setList(arr)
     } catch (e) {
       console.log(e)
     }
@@ -41,8 +35,6 @@ const getters = {}
 
 export default {
   namespaced: true,
-  state,
-  mutations,
   actions,
   getters
 }

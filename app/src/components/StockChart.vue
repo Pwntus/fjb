@@ -16,9 +16,10 @@
 
 <script>
 import { merge } from 'lodash-es'
-import { mapState, mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 import Highcharts from '@/components/Highcharts'
 import config from '@/config'
+import list from '@/list'
 
 export default {
   name: 'StockChart',
@@ -29,16 +30,16 @@ export default {
     chartOptions: {}
   }),
   computed: {
-    ...mapState('App', ['list']),
     seriesAvg() {
-      return this.list.map(({ timestamp, value, n }) => ({
+      return list.getList().map(({ timestamp, value, n }) => ({
         x: timestamp,
         y: value,
         n: n
       }))
     },
     seriesMedian() {
-      return this.list
+      return list
+        .getList()
         .map(({ timestamp, median, n }) => ({
           x: timestamp,
           y: median,
