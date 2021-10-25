@@ -53,7 +53,7 @@ export default {
       max-height 100%
 
   .faq
-    margin 150px 0 0
+    margin 100px 0 0
 
   .lf
     padding 1px 8px

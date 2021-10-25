@@ -1,17 +1,23 @@
 <template lang="pug">
 .stock-chart(v-if="ready")
-  highcharts(
-    :options="chartOptions"
-    :show-median="showMedian"
-    ref="chart"
-  )
-  v-switch.mt-6(
+  .wrapper
+    highcharts(
+      :options="chartOptions"
+      :show-median="showMedian"
+      ref="chart"
+    )
+  v-switch.mt-6.mb-12(
     v-model="showMedian"
     label="Vis median"
     color="#0c2231"
     inset dark dense
     hide-details
   )
+  .wrapper
+    highcharts(
+      :options="chartOptions2"
+      ref="chart"
+    )
 </template>
 
 <script>
@@ -27,7 +33,8 @@ export default {
   data: () => ({
     ready: false,
     showMedian: false,
-    chartOptions: {}
+    chartOptions: {},
+    chartOptions2: {}
   }),
   computed: {
     seriesAvg() {
@@ -35,6 +42,12 @@ export default {
         x: timestamp,
         y: value,
         n: n
+      }))
+    },
+    seriesAmount() {
+      return list.getList().map(({ timestamp, n }) => ({
+        x: timestamp,
+        y: n
       }))
     },
     seriesMedian() {
@@ -127,7 +140,39 @@ export default {
           }
         }
       }
-      this.chartOptions = merge(config.HIGHCHARTS_GLOBAL, localOptions)
+      let localOptions2 = JSON.parse(JSON.stringify(localOptions))
+      localOptions2.series = [
+        {
+          name: 'I omløp (ca)',
+          type: 'spline',
+          data: this.seriesAmount,
+          visible: true,
+          tooltip: {
+            pointFormat: `
+                <table cellspacing="0" cellpadding="0" style="border:none;color:#000">
+                  <tr>
+                    <td style="padding-right:8px;text-align:right">{series.name}:</td>
+                    <td style="font-weight:bold;text-align:left;color:#0c2231">{point.y}st</td>
+                  </tr>
+                </table>`
+          }
+        }
+      ]
+      localOptions2.yAxis = {
+        title: {
+          text: 'I ømløp (ca)',
+          style: {
+            color: '#FFF'
+          }
+        }
+      }
+      localOptions2.plotOptions.spline.dataLabels.format = '{point.y}st'
+      this.chartOptions = JSON.parse(
+        JSON.stringify(merge(config.HIGHCHARTS_GLOBAL, localOptions))
+      )
+      this.chartOptions2 = JSON.parse(
+        JSON.stringify(merge(config.HIGHCHARTS_GLOBAL, localOptions2))
+      )
     }
   },
   async mounted() {
@@ -145,9 +190,11 @@ export default {
 <style lang="stylus" scoped>
 .stock-chart
   width 100%
-  height 300px
 
-  > div:not(.v-input)
-    position relative
-    height 100%
+  .wrapper
+    height 300px
+
+    > div:not(.v-input)
+      position relative
+      height 100%
 </style>
