@@ -9,16 +9,13 @@ const ENDPOINT = 'https://www.finn.no/api/search-qf'
 const Q = 'fun+light+julebrus'
 
 const MAP_FN = ({ price: { amount } }) => amount
-const FILTER_FN = amount => amount > 0
+const FILTER_FN = (amount) => amount > 0
 
 const getS3Object = (file, s3Params) => {
   return new Promise((resolve, reject) => {
     const s3 = new AWS.S3()
     const fileStream = fs.createWriteStream(file)
-    const s3Stream = s3
-      .getObject(s3Params)
-      .createReadStream()
-      .pipe(fileStream)
+    const s3Stream = s3.getObject(s3Params).createReadStream().pipe(fileStream)
     s3Stream.on('error', reject)
     fileStream.on('error', reject)
     fileStream.on('close', () => resolve(file))
@@ -33,6 +30,7 @@ const search = async (page = 1) => {
     const params = {
       searchkey: 'SEARCH_ID_BAP_COMMON',
       search_type: 'SEARCH_ID_BAP_ALL',
+      vertical: 'bap',
       sort: 'PRICE_ASC',
       q: Q,
       page
@@ -64,7 +62,7 @@ export const main = async (event, context) => {
     if (pages > 1) {
       // Construct searches
       const jobs = await Promise.all(
-        [...Array(pages - 1).keys()].map(i => {
+        [...Array(pages - 1).keys()].map((i) => {
           return search(i + 2)
         })
       )
@@ -78,8 +76,8 @@ export const main = async (event, context) => {
     const n = sorted.length
     const timestamp = new Date().getTime()
 
-    let avg = 0,
-      median = 0
+    let avg = 0
+    let median = 0
 
     if (n > 0) {
       // Calculate average
